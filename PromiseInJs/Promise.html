@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="output"></div>
+
+  <script>
+    function anotherAsyncFunction() {
+      return "hi";
+    }
+    const myPromise = new Promise((resolve, reject) => {
+      // Some asynchronous operation
+      let success = true; // or false based on some logic
+
+      if (success) {
+        resolve("Operation was successful");
+      } else {
+        reject("Operation failed");
+      }
+    });
+
+    // myPromise.then(function (result) {
+    //   console.log(result); 
+    // }).catch(function (error) {
+    //   console.log(error); 
+    // });
+
+    // Chaining a Promise
+
+    myPromise
+      .then(function (result) {
+        console.log(result);
+        return anotherAsyncFunction(); // Returns a new promise
+      })
+      .then(function (nextResult) {
+        console.log(nextResult);
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+
+    let promise1 = Promise.resolve("the promise is successful");
+    let promise2 = Promise.resolve("the promise is not successful");
+    Promise.all([promise1, promise2]).then(function (results) {
+      console.log(results)
+    })
+    let promise3 = new Promise((resolve) => setTimeout(resolve, 100, "Promise 1"));
+    let promise4 = new Promise((resolve) => setTimeout(resolve, 100, "Promise 2"));
+    Promise.race([promise3, promise4]).then(function (result) {
+      console.log(result)
+    })
+
+
+
+    // With Promise
+    function fetchData() {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve("Data fetched");
+        }, 1000);
+      });
+    }
+
+    fetchData()
+      .then((data) => {
+        console.log(data); // Output: "Data fetched"
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    // with async and await
+
+
+    async function fetchData() {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve("Data fetched");
+        }, 1000);
+      });
+    }
+
+    async function getData() {
+      try {
+        const data = await fetchData(); // Waits here until the promise resolves
+        console.log(data); // Output: "Data fetched"
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getData();
+    let promise5 = Promise.resolve("Success");
+    let promise6 = Promise.reject("Failure");
+
+    Promise.allSettled([promise5, promise6]).then(results => {
+      console.log('', results);
+      // [
+      //   { status: "fulfilled", value: "Success" },
+      //   { status: "rejected", reason: "Failure" }
+      // ]
+    });
+
+
+
+  </script>
+</body>
+
+</html>
